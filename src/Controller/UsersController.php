@@ -1,7 +1,10 @@
 <?php
+
 namespace App\Controller;
 
+
 use App\Controller\AppController;
+use Cake\Event\Event;
 
 /**
  * Users Controller
@@ -12,6 +15,11 @@ use App\Controller\AppController;
  */
 class UsersController extends AppController
 {
+    public function beforeFilter(Event $event)
+    {
+        $this->Auth->allow();
+        // $this->Auth->deny();
+    }
     /**
      * Index method
      *
@@ -40,13 +48,29 @@ class UsersController extends AppController
         $this->set('user', $user);
     }
 
-  /**
-     * login method
+    /**
+     * log as user in
      *
      */
     public function login()
     {
-        
+        if ($this->request->is('post')) {
+            if ($this->Auth->user('id')) {
+                // check if the user is logged in already
+                $this->Flash->warning(__('You are already logged in'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+            } else {
+                // if the user is not already in, attempt to log user in
+                $user = $this->Auth->identify();
+
+                if ($user) {
+                    $this->Auth->setUser($user);
+                    $this->Flash->success(__('Login successful'));
+                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+                }
+                $this->Flash->error(__('Sorry the login was not successful'));
+            }
+        }
     }
     /**
      * signup method
@@ -85,6 +109,11 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $this->set(compact('user'));
+    }
+
+    public function forgotPassword()
+    {
+        //empty for now
     }
 
     /**
