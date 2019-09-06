@@ -54,23 +54,33 @@ class UsersController extends AppController
      */
     public function login()
     {
-        if ($this->request->is('post')) {
-            if ($this->Auth->user('id')) {
-                // check if the user is logged in already
-                $this->Flash->warning(__('You are already logged in'));
-                return $this->redirect(['controller' => 'Users', 'action' => 'index']);
-            } else {
-                // if the user is not already in, attempt to log user in
-                $user = $this->Auth->identify();
-
-                if ($user) {
-                    $this->Auth->setUser($user);
-                    $this->Flash->success(__('Login successful'));
-                    return $this->redirect(['controller' => 'Users', 'action' => 'index']);
-                }
-                $this->Flash->error(__('Sorry the login was not successful'));
-            }
+        //check if user is logged in
+        if ($this->Auth->user('id')) {
+            // check if the user is logged in already
+            $this->Flash->warning(__('You are already logged in'));
+            return $this->redirect(['controller' => 'Users', 'action' => 'index']);
         }
+        if ($this->request->is('post')) {
+
+            // if the user is not already in, attempt to log user in
+            $user = $this->Auth->identify();
+
+            if ($user) {
+                $this->Auth->setUser($user);
+                $this->Flash->success(__('Login successful'));
+                return $this->redirect(['controller' => 'Users', 'action' => 'index']);
+            }
+            $this->Flash->error(__('Sorry the login was not successful'));
+        }
+    }
+    /**
+     * logout function
+     *
+     */
+    public function logout()
+    {
+        $this->Flash->success('you are now loged out');
+        return $this->redirect($this->Auth->logout());
     }
     /**
      * signup method

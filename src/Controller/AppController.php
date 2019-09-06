@@ -50,7 +50,7 @@ class AppController extends Controller
             'loginAction' => [
                 'controller' => 'Users',
                 'action' => 'login',
-                'plugin' => 'Users'
+                //'plugin' => 'Users'
             ],
             'authError' => 'Vous croyez vraiment que vous pouvez faire cela?',
             'authenticate' => [
